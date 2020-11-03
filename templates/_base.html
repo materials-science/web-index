@@ -110,8 +110,11 @@
             toggle_fn()
             $('.toggle-btn').click(toggle_fn)
             setTimeout(() => {
-                toggle_theme && toggle_fn()
-            }, 30 * 1000)
+                if (toggle_theme) {
+                    toggle_theme = !toggle_theme
+                    ckLine.destroy()
+                }
+            }, 120 * 1000)
         })
     </script>
 </body>

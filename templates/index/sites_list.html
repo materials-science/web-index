@@ -1,0 +1,307 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}WebSites List{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/card.css' %}">
+<link rel="stylesheet" href="{% static 'css/owl-carousel/owl.carousel.min.css' %} ">
+<link rel="stylesheet" href="{% static 'css/owl-carousel/owl.theme.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %} ">
+<style>
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .testimonial {
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        padding: 30px;
+        margin: 0 15px;
+        background: rgba(243, 243, 243, .9);
+        height: 200px;
+    }
+
+    .testimonial .pic {
+        width: 90px;
+        height: 90px;
+        margin: 0 30px 15px 0;
+        float: left;
+    }
+
+    .testimonial .pic img {
+        width: 100%;
+        height: auto;
+        border-radius: 50%;
+    }
+
+    .testimonial .pic p {
+        position: absolute;
+        bottom: -8px;
+        color: #888888;
+    }
+
+    .testimonial .testimonial-title {
+        color: #000000;
+        font-size: 16px;
+        margin-top: 5px;
+        font-weight: 800;
+        text-transform: capitalize;
+    }
+
+    .testimonial .testimonial-title small {
+        display: block;
+        color: #dc005a;
+        font-size: 14px;
+        font-weight: 800;
+        margin-top: 10px;
+    }
+
+    .testimonial .testimonial-review p {
+        color: #888888;
+        font-size: 15px;
+        font-style: italic;
+        line-height: 19px;
+        margin-bottom: 0;
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+    }
+
+    .owl-theme .owl-controls {
+        margin-top: 20px;
+    }
+
+    .owl-theme .owl-controls .owl-page span {
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        opacity: 1;
+    }
+
+    .owl-theme .owl-controls .owl-page.active span,
+    .owl-theme .owl-controls.clickable .owl-page:hover span {
+        background: #fff;
+        border: 1px solid #cdcdcd;
+    }
+
+    .owl-pagination {
+        margin-top: 40px;
+    }
+
+    .owl-theme .owl-controls .owl-page.active span,
+    .owl-theme .owl-controls.clickable .owl-page:hover span {
+        background: #3F4144;
+        border: 3px solid #fff;
+    }
+
+    @media screen and (max-width: 990px) {
+        .testimonial-parallax h2 {
+            margin-bottom: 40px;
+        }
+
+        .testimonial {
+            margin: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class='content'>
+    {% for site in page_obj %}
+    <article class="card" data-id='{{site.id}}'>
+        <header class="card__thumb">
+            {% if 'http://' in site.cover_img_url or 'https://' in site.cover_img_url %}
+            <img src="{{site.cover_img_url}}" />
+            {%else%}
+            <img src="{% static site.cover_img_url %}" />
+            {% endif %}
+        </header>
+        <date class="card__date">
+            <span class="card__date__day">♥</span>
+            <br />
+            <span class="card__date__month">{{site.favorite}}</span>
+        </date>
+
+        <div class="card__body" data-url="{{site.url}}">
+            <div class="card__category">site</div>
+            <h2 class="card__title">{{site.title}}</h2>
+            <p class="card__description">
+                {%if site.description|length >= 100 %}
+                {{site.description|slice:"100"}}...
+                {%else%} {{site.description}}
+                {%endif%}
+            </p>
+        </div>
+
+        <footer class="card__footer">
+            <span class="icon ion-clock"></span> {{site.start_date}}
+            <span class="icon ion-chatbox"></span> {{site.viewd_times}}
+        </footer>
+    </article>
+    {% endfor %}
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% comment %} {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %} {% endcomment %}
+
+        {% comment %} <div id="preview" class="preview">
+            <span>1</span>
+        </div> {% endcomment %}
+    </span>
+</div>
+{% endblock content %}
+
+{% block footer %}
+<div class="row">
+    <div class="col-md-12 pt50">
+        <div id="testimonial-slider" class="owl-carousel">
+            {% for staff in staff_list %}
+            <div class="testimonial">
+                <div class="pic">
+                    {% if 'http://' in site.cover_img_url or 'https://' in site.cover_img_url %}
+                    <img src="{{staff.avatar_url}}" />
+                    {%else%}
+                    <img src="{% static staff.avatar_url %}" />
+                    {% endif %}
+                    <p>Email: {{staff.email | default:'Private (⌐■_■)'}}</p>
+                </div>
+
+                <div class="testimonial-review">
+                    <h4 class="testimonial-title">
+                        {{staff.name}}
+                        <small>{{staff.positions}}</small></h4>
+                    <p>{{staff.profile}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% comment %} <div id="testimonial-slider" class="owl-carousel">
+        <div class="testimonial">
+            <div class="testimonial-profile">
+                <a href="#"><img src="images/1.jpg" alt=""></a>
+            </div>
+            <div class="testimonial-content">
+                <h3 class="testimonial-title"><a href="#">Williamson</a></h3>
+                <span class="testimonial-post">Web Designer</span>
+                <p class="testimonial-description">
+                    ......
+                </p>
+                <ul class="social-links">
+                    <li><a href="#" class="fa fa-instagram"></a></li>
+                    <li><a href="#" class="fa fa-twitter"></a></li>
+                    <li><a href="#" class="fa fa-pinterest"></a></li>
+                    <li><a href="#" class="fa fa-linkedin"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div> {% endcomment %}
+</div>
+{% endblock footer %}
+
+{% block extra_javascript %}
+<script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %} ">
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // toastr config
+        toastr.options = {
+            closeButton: false,
+            debug: false,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            onclick: null,
+            showDuration: "300",
+            hideDuration: "1000",
+            timeOut: "2000",
+            extendedTimeOut: "1000",
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut"
+        };
+        // carousel config
+        $("#testimonial-slider").owlCarousel({
+            items: 2,
+            itemsDesktop: [1000, 1],
+            itemsDesktopSmall: [979, 1],
+            itemsTablet: [768, 1],
+            pagination: true,
+            autoPlay: true
+        });
+
+        // Sites redirect
+        $('.card__body').click(function () {
+            let url = $(this).data('url')
+            location.href = url
+        })
+        // Sites favorite
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader('X-CSRFtoken', $.cookie('csrftoken'));
+            }
+        })
+        $('.card__date').click(function () {
+            let that = this
+            let id = $(that).parent('.card').data('id')
+            $.ajax({
+                url: `/sites/${id}/favorite`,
+                type: 'POST',
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.code == 0) {
+                        toastr.success('Success!')
+                        let node = $(that).parents('.card').find('.card__date__month')
+                        node.text(Number(node.text()) + 1)
+                    } else {
+                        toastr.error(data.detail, 'Errors!')
+                    }
+                }
+            })
+        })
+
+        function hasScrollbar() {
+            return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
+        }
+        if (!hasScrollbar()) {
+            $('footer.footer').css({
+                'position': 'absolute',
+                'bottom': '0',
+                'height': '300px'
+            })
+            $('.content').css({
+                'padding-bottom': '300px'
+            })
+        }
+    });
+    /* DEMO2 */
+    /*$(document).ready(function(){
+        $("#testimonial-slider").owlCarousel({
+            items:2,
+            itemsDesktop:[1000,2],
+            itemsDesktopSmall:[979,2],
+            itemsTablet:[767,1],
+            pagination: true,
+            autoPlay:true
+        });
+    });*/
+</script>
+{% endblock extra_javascript %}

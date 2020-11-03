@@ -16,11 +16,34 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
+    <style>
+        .body-bg {
+            background: linear-gradient(141deg, #0fb8ad 0%, #76f1ff 51%, #2cb5e8 75%);
+        }
+
+        #ckLine {
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            background-color: rgba(255, 255, 255, .5);
+            /* filter: blur(1px); */
+        }
+
+        .toggle-btn {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            opacity: .5;
+            z-index: 99;
+        }
+    </style>
     {% block extra_css %}{% endblock %}
     {% endblock %}
 </head>
 
-<body>
+<body class="body-bg">
+    <div class="toggle-btn btn btn-info">Pure Color Bg</div>
+    <svg id="ckLine" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="container">
         {% block content %}
         <p>Default content...</p>
@@ -35,14 +58,13 @@
         </div>
     </footer>
 
-
-
     {% block javascript %}
     <!-- 3rd party JavaScript -->
     <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
     <script src="{% static 'js/js.cookie.js' %}"></script>
     <script src="{% static 'js/toastr.min.js' %}"></script>
-    
+    <script src="{% static 'js/jquery.ckLine.min.js'%}"></script>
+
     <!-- Bootstrap JavaScript -->
     {% comment %} <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
@@ -55,6 +77,43 @@
     {% block extra_javascript %}{% endblock %}
     {% endblock javascript %}
 
+    <script>
+        $(document).ready(function () {
+            let toggle_theme = false
+            let ckLine = null
+            let toggle_fn = function () {
+                if (toggle_theme == true) {
+                    toggle_theme = false
+                    ckLine.destroy()
+                    $('.toggle-btn').text('Dynamic Line Bg')
+                    $('#ckLine').animate({
+                        'opacity': 0
+                    })
+                    $('body').removeClass('body-bg')
+                } else {
+                    toggle_theme = true
+                    ckLine = $('#ckLine').ckLine({
+                        leftRight: false,
+                        strokeColor: 'rgba(255,255,255,0.4)',
+                        interval: 1000,
+                        // animateTime: 2000,
+                        // lifeTime: 2000,
+                        animationTimeRange: [800, 1600]
+                    })
+                    $('.toggle-btn').text('Pure Color Bg')
+                    $('#ckLine').animate({
+                        'opacity': 1
+                    })
+                    $('body').addClass('body-bg')
+                }
+            }
+            toggle_fn()
+            $('.toggle-btn').click(toggle_fn)
+            setTimeout(() => {
+                toggle_theme && toggle_fn()
+            }, 30 * 1000)
+        })
+    </script>
 </body>
 
 </html>

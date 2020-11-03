@@ -116,11 +116,7 @@
     {% for site in page_obj %}
     <article class="card" data-id='{{site.id}}'>
         <header class="card__thumb">
-            {% if 'http://' in site.cover_img_url or 'https://' in site.cover_img_url %}
-            <img src="{{site.cover_img_url}}" />
-            {%else%}
-            <img src="{% static site.cover_img_url %}" />
-            {% endif %}
+            <img src="{% static site.cover_img %}" />
         </header>
         <date class="card__date">
             <span class="card__date__day">♥</span>
@@ -176,11 +172,7 @@
             {% for staff in staff_list %}
             <div class="testimonial">
                 <div class="pic">
-                    {% if 'http://' in site.cover_img_url or 'https://' in site.cover_img_url %}
-                    <img src="{{staff.avatar_url}}" />
-                    {%else%}
-                    <img src="{% static staff.avatar_url %}" />
-                    {% endif %}
+                    <img src="{% static staff.avatar %}" />
                     <p>Email: {{staff.email | default:'Private (⌐■_■)'}}</p>
                 </div>
 

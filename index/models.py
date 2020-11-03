@@ -5,13 +5,13 @@ def user_avatar_path(instance, filename):
     ext = filename.split('.')[-1]
     file_name = timezone.now().strftime("%Y%m%d_%H%M%S")
     file = file_name + '.' + ext
-    return 'media/users/{id}/{file}'.format(id=instance.id, file=file)
+    return 'media/users/{file}'.format(file=file)
 
 def sites_cover_path(instance, filename):
     ext = filename.split('.')[-1]
     file_name = timezone.now().strftime("%Y%m%d_%H%M%S")
     file = file_name + '.' + ext
-    return 'media/sites/{id}/{file}'.format(id=instance.id, file=file)
+    return 'media/sites/{file}'.format(file=file)
 
 class WebSite(models.Model):
     title = models.CharField(max_length=50)

@@ -19,5 +19,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index_pagination, name='index'),
-    path('sites/<int:id>/favorite', views.favorite, name='site_favorite')
+    path('sites/<int:id>/favorite', views.site_favorite, name='site_favorite'),
+    path('posts/<int:id>/favorite', views.post_favorite, name='post_favorite')
 ]

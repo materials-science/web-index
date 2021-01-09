@@ -47,7 +47,7 @@ def index_pagination(request):
 
 
 @require_POST
-def favorite(request, id):
+def site_favorite(request, id):
     check_session = request.session.get('site_favorite')
     if check_session:
         return JsonResponse({
@@ -61,6 +61,29 @@ def favorite(request, id):
     try:
         WebSite.objects.all().filter(id=id).update(favorite=F('favorite') + 1)
         request.session['site_favorite'] = True
+    except Exception as e:
+        resp['code'] = '1001'
+        resp['msg'] = 'fail'
+        resp['detail'] = str(e)
+
+    return JsonResponse(resp)
+
+
+@require_POST
+def post_favorite(request, id):
+    check_session = request.session.get('post_favorite')
+    if check_session:
+        return JsonResponse({
+            'code': '-1',
+            'msg': 'favorited'
+        })
+    resp = {
+        'code': '0',
+        'msg': 'success'
+    }
+    try:
+        Post.objects.all().filter(id=id).update(favorite=F('favorite') + 1)
+        request.session['post_favorite'] = True
     except Exception as e:
         resp['code'] = '1001'
         resp['msg'] = 'fail'

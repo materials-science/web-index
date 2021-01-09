@@ -30,26 +30,17 @@
             background-color: rgba(255, 255, 255, .5);
             /* filter: blur(1px); */
         }
-
-        .toggle-btn {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            opacity: .5;
-            z-index: 99;
-        }
     </style>
     {% block extra_css %}{% endblock %}
     {% endblock %}
 </head>
 
 <body class="body-bg">
-    <div class="toggle-btn btn btn-info">Pure Color Bg</div>
     <svg id="ckLine" xmlns="http://www.w3.org/2000/svg"></svg>
     <nav class="header-nav navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded"
         style="background:rgba(248,249,250,.9)!important;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar </a>
+            <a class="navbar-brand" href="#">WebSites </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -62,10 +53,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#applications">Applications</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link toggle-btn" style="cursor: pointer;">Pure Color Bg</a>
+                    </li>
                 </ul>
                 <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-info" type="submit">Search</button>
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                        style="cursor: not-allowed;">
+                    <button class="btn btn-outline-info" type="submit" style="cursor: not-allowed;">Search</button>
                 </form>
             </div>
         </div>

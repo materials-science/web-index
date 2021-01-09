@@ -15,9 +15,23 @@ html {
 body {
 	margin-bottom: 60px;
 	/* Margin bottom by footer height */
-	background-color: #446072;
+    /* background-color: #446072; */
+    background: #dee2e6;
 	font-family: "Microsoft YaHei", sans-serif;
 	/* color: white; */
+}
+
+body::-webkit-scrollbar {
+	width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+	background: #ffffff;
+}
+
+body::-webkit-scrollbar-thumb {
+	background: #ffa54f;
+	border-radius: 2em;
 }
 
 .container {
@@ -26,6 +40,9 @@ body {
 	margin-bottom: 24px;
 }
 
+.container {
+	padding-top: 48px;
+}
 .container > nav {
 	margin-top: 24px;
 }
@@ -34,6 +51,9 @@ body {
 	padding: 8px 24px;
 	font-size: 16px;
 	font-weight: bold;
+	position: fixed;
+	width: 100%;
+	z-index: 99;
 }
 
 .pricing-header {

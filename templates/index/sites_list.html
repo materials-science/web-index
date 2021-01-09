@@ -1,12 +1,11 @@
 {% extends '_base.html' %}
 {% load static %}
-{% block title %}WebSites List{% endblock title %}
-
+{% block title %}WebSites List{%endblock title %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/card.css' %}">
-<link rel="stylesheet" href="{% static 'css/owl-carousel/owl.carousel.min.css' %} ">
-<link rel="stylesheet" href="{% static 'css/owl-carousel/owl.theme.min.css' %}">
-<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %} ">
+<!-- <link rel="stylesheet" href="{% static 'css/card.css' %}" /> -->
+<link rel="stylesheet" href="{% static 'css/owl-carousel/owl.carousel.min.css' %} " />
+<link rel="stylesheet" href="{% static 'css/owl-carousel/owl.theme.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %} " />
 <style>
     .content {
         display: flex;
@@ -19,7 +18,7 @@
         border-radius: 5px;
         padding: 30px;
         margin: 0 15px;
-        background: rgba(255, 255, 255, .8);
+        background: rgba(255, 255, 255, 0.8);
         height: 200px;
     }
 
@@ -95,7 +94,7 @@
 
     .owl-theme .owl-controls .owl-page.active span,
     .owl-theme .owl-controls.clickable .owl-page:hover span {
-        background: #3F4144;
+        background: #3f4144;
         border: 3px solid #fff;
     }
 
@@ -108,40 +107,69 @@
             margin: 0;
         }
     }
+
+    .card {
+        overflow: hidden;
+    }
+
+    .card:hover {
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .card img {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+        transition: opacity 0.5s, -webkit-transform 0.5s;
+        transition: opacity 0.5s, transform 0.5s;
+        transition: opacity 0.5s, transform 0.5s, -webkit-transform 0.5s;
+        object-fit: cover;
+    }
+
+    .card img:hover {
+        opacity: 0.6;
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
 </style>
 {% endblock %}
-
 {% block content %}
-<div class='content'>
+<!-- Image and text -->
+<nav class="navbar navbar-light shadow-sm bg-light rounded" style="margin-bottom: 24px;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#applications">
+            <i>🌐</i>Applications
+        </a>
+    </div>
+</nav>
+<div id="applications" class="row row-cols-1 row-cols-md-3 row-cols-xxl-4 g-4">
     {% for site in page_obj %}
-    <article class="card" data-id='{{site.id}}'>
-        <header class="card__thumb">
-            <img src="{% static site.cover_img %}" />
-        </header>
-        <date class="card__date">
-            <span class="card__date__day">♥</span>
-            <br />
-            <span class="card__date__month">{{site.favorite}}</span>
-        </date>
-
-        <div class="card__body" data-url="{{site.url}}">
-            <div class="card__category">site</div>
-            <h2 class="card__title">{{site.title}}</h2>
-            <p class="card__description">
-                {%if site.description|length >= 100 %}
-                {{site.description|slice:"100"}}...
-                {%else%} {{site.description}}
-                {%endif%}
-            </p>
+    <div class="col">
+        <div class="card" data-id="{{site.id}}" data-url="{{site.url}}">
+            <img src="{% static site.cover_img %}" class="card-img-top" alt="{{site.url}}" style="cursor: pointer;" />
+            <div class="card-body">
+                <h5 class="card-title">{{site.title}}</h5>
+                <p class="card-text">
+                    {%if site.description|length >= 100 %}
+                    {{site.description|slice:"100"}}... {%else%}
+                    {{site.description}} {%endif%}
+                </p>
+            </div>
+            <div class="card-footer" style="display: flex;justify-content: space-between;align-items: flex-end;">
+                <small class="text-muted">{{site.start_date}}</small>
+                <span>
+                    <span class="site-favorite badge rounded-pill bg-info text-danger" style="cursor: pointer;">♥ <span
+                            class="favorite-count">{{site.favorite}}</span></span>
+                    <span class="badge rounded-pill bg-info text-dark"><a href="{{site.url}}"
+                            class="card-link text-decoration-none">link</a></span>
+                </span>
+            </div>
         </div>
-
-        <footer class="card__footer">
-            <span class="icon ion-clock"></span> {{site.start_date}}
-            <span class="icon ion-chatbox"></span> {{site.viewd_times}}
-        </footer>
-    </article>
+    </div>
     {% endfor %}
 </div>
+
 <div class="pagination">
     <span class="step-links">
         {% comment %} {% if page_obj.has_previous %}
@@ -156,15 +184,14 @@
         {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}">next</a>
         <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %} {% endcomment %}
-
-        {% comment %} <div id="preview" class="preview">
+        {% endif %} {% endcomment %} {% comment %}
+        <div id="preview" class="preview">
             <span>1</span>
-        </div> {% endcomment %}
+        </div>
+        {% endcomment %}
     </span>
 </div>
 {% endblock content %}
-
 {% block footer %}
 <div class="row">
     <div class="col-md-12 pt50">
@@ -179,24 +206,24 @@
                 <div class="testimonial-review">
                     <h4 class="testimonial-title">
                         {{staff.name}}
-                        <small>{{staff.positions}}</small></h4>
+                        <small>{{staff.positions}}</small>
+                    </h4>
                     <p>{{staff.profile}}</p>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-    {% comment %} <div id="testimonial-slider" class="owl-carousel">
+    {% comment %}
+    <div id="testimonial-slider" class="owl-carousel">
         <div class="testimonial">
             <div class="testimonial-profile">
-                <a href="#"><img src="images/1.jpg" alt=""></a>
+                <a href="#"><img src="images/1.jpg" alt="" /></a>
             </div>
             <div class="testimonial-content">
                 <h3 class="testimonial-title"><a href="#">Williamson</a></h3>
                 <span class="testimonial-post">Web Designer</span>
-                <p class="testimonial-description">
-                    ......
-                </p>
+                <p class="testimonial-description">......</p>
                 <ul class="social-links">
                     <li><a href="#" class="fa fa-instagram"></a></li>
                     <li><a href="#" class="fa fa-twitter"></a></li>
@@ -205,13 +232,12 @@
                 </ul>
             </div>
         </div>
-    </div> {% endcomment %}
+    </div>
+    {% endcomment %}
 </div>
 {% endblock footer %}
-
 {% block extra_javascript %}
-<script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %} ">
-</script>
+<script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %} "></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // toastr config
@@ -228,7 +254,7 @@
             showEasing: "swing",
             hideEasing: "linear",
             showMethod: "fadeIn",
-            hideMethod: "fadeOut"
+            hideMethod: "fadeOut",
         };
         // carousel config
         $("#testimonial-slider").owlCarousel({
@@ -237,54 +263,62 @@
             itemsDesktopSmall: [979, 1],
             itemsTablet: [768, 1],
             pagination: true,
-            autoPlay: true
+            autoPlay: true,
         });
 
         // Sites redirect
-        $('.card__body').click(function () {
-            let url = $(this).data('url')
-            location.href = url
-        })
+        $(".card img").click(function () {
+            let url = $(this).parents(".card").data("url");
+            location.href = url;
+        });
         // Sites favorite
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader('X-CSRFtoken', $.cookie('csrftoken'));
-            }
-        })
-        $('.card__date').click(function () {
-            let that = this
-            let id = $(that).parent('.card').data('id')
+                xhr.setRequestHeader("X-CSRFtoken", $.cookie("csrftoken"));
+            },
+        });
+        $(".site-favorite").click(function () {
+            let that = this;
+            let id = $(that).parents(".card").data("id");
             $.ajax({
                 url: `/sites/${id}/favorite`,
-                type: 'POST',
-                dataType: 'JSON',
+                type: "POST",
+                dataType: "JSON",
                 success: function (data) {
                     if (data.code == 0) {
-                        toastr.success('Success!')
-                        let node = $(that).parents('.card').find('.card__date__month')
-                        node.text(Number(node.text()) + 1)
+                        toastr.success("Success!");
+                        let node = $(that)
+                            .parents(".card")
+                            .find(".favorite-count");
+                        node.text(Number(node.text()) + 1);
                     } else {
-                        toastr.error(data.detail, 'Errors!')
+                        toastr.error(data.detail, "Errors!");
                     }
-                }
-            })
-        })
+                },
+            });
+        });
 
         function hasScrollbar() {
-            return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
+            return (
+                document.body.scrollHeight >
+                (window.innerHeight || document.documentElement.clientHeight)
+            );
         }
         if (!hasScrollbar()) {
-            $('footer.footer').css({
-                'position': 'absolute',
-                'bottom': '0',
-                'height': '300px'
-            })
-            $('.content').css({
-                'padding-bottom': '300px'
-            })
+            $("footer.footer").css({
+                position: "absolute",
+                bottom: "0",
+                height: "300px",
+            });
+            $("body").css({
+                overflow: "hidden"
+            });
+            $(".content").css({
+                "padding-bottom": "300px",
+            });
         }
     });
-    /* DEMO2 */
+	/* DEMO2 */
     /*$(document).ready(function(){
         $("#testimonial-slider").owlCarousel({
             items:2,

@@ -1,5 +1,6 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load extras %}
 {% block title %}WebSites List{%endblock title %}
 {% block extra_css %}
 <!-- <link rel="stylesheet" href="{% static 'css/card.css' %}" /> -->
@@ -110,10 +111,13 @@
 
     .card {
         overflow: hidden;
+        opacity: 0.8;
+        transition: all .5s;
     }
 
     .card:hover {
         box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+        opacity: 1;
     }
 
     .card img {
@@ -125,6 +129,7 @@
         transition: opacity 0.5s, transform 0.5s;
         transition: opacity 0.5s, transform 0.5s, -webkit-transform 0.5s;
         object-fit: cover;
+        width: 100%;
     }
 
     .card img:hover {
@@ -132,22 +137,35 @@
         -webkit-transform: scale(1.1);
         transform: scale(1.1);
     }
+
+    .pagination {
+        position: relative;
+    }
 </style>
 {% endblock %}
 {% block content %}
-<!-- Image and text -->
-<nav class="navbar navbar-light shadow-sm bg-light rounded" style="margin-bottom: 24px;">
+<!-- ----------------------------------------------------------------------- -->
+<!-- SITE -->
+<nav class="navbar navbar-light shadow-sm bg-light rounded"
+    style="margin-bottom: 24px;background:rgba(248,249,250,.7)!important;">
     <div class="container-fluid">
         <a class="navbar-brand" href="#applications">
             <i>🌐</i>Applications
         </a>
+        <div>
+            <span>
+                IP <span class="badge rounded-pill bg-info bg-gradient text-dark">{{ip}}</span>
+            </span>
+        </div>
     </div>
 </nav>
-<div id="applications" class="row row-cols-1 row-cols-md-3 row-cols-xxl-4 g-4">
+<div id="applications" class="row row-cols-1 row-cols-md-3 row-cols-xxl-3 g-4">
     {% for site in page_obj %}
+    {% site_url site is_internal_ip as url %}
     <div class="col">
-        <div class="card" data-id="{{site.id}}" data-url="{{site.url}}">
-            <img src="{% static site.cover_img %}" class="card-img-top" alt="{{site.url}}" style="cursor: pointer;" />
+        <div class="card" data-id="{{site.id}}" data-url="{{url|default:'#'}}">
+            <img src="{% static site.cover_img %}" class="card-img-top" alt="{{url|default:'#'}}"
+                style="cursor: pointer;" />
             <div class="card-body">
                 <h5 class="card-title">{{site.title}}</h5>
                 <p class="card-text">
@@ -161,36 +179,105 @@
                 <span>
                     <span class="site-favorite badge rounded-pill bg-info text-danger" style="cursor: pointer;">♥ <span
                             class="favorite-count">{{site.favorite}}</span></span>
-                    <span class="badge rounded-pill bg-info text-dark"><a href="{{site.url}}"
-                            class="card-link text-decoration-none">link</a></span>
+                    <span class="badge rounded-pill bg-info text-dark"><a href="{{url|default:'#'}}"
+                            class="card-link text-decoration-none text-white">link</a></span>
                 </span>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
-
-<div class="pagination">
-    <span class="step-links">
-        {% comment %} {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo; first</a>
-        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1&type=site" target="_self">&laquo;First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&type=site" target="_self">&laquo;
+                Previous</a>
+        </li>
         {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
+        <li class="page-item"><a class="page-link">Page {{ page_obj.number }} of
+                {{page_obj.paginator.num_pages }}</a></li>
 
         {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">next</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %} {% endcomment %} {% comment %}
-        <div id="preview" class="preview">
-            <span>1</span>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&type=site" target="_self">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&type=site" target="_self">Last
+                &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+<!-- ----------------------------------------------------------------------- -->
+<!-- POST -->
+<nav class="navbar navbar-light shadow-sm bg-light rounded"
+    style="margin-bottom: 24px;background:rgba(248,249,250,.7)!important;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#applications">
+            <i>🌐</i>Posts
+        </a>
+        <div>
+            <span>
+                IP <span class="badge rounded-pill bg-info bg-gradient text-dark">{{ip}}</span>
+            </span>
         </div>
-        {% endcomment %}
-    </span>
+    </div>
+</nav>
+<div class="row row-cols-1 row-cols-md-1 row-cols-xxl-2">
+    {% for post in posts_page_obj %}
+    <div class="col">
+        <div class="card mb-3" style="max-width: 100%;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{% static post.cover_img %}" alt="{{post.title}}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{post.title}}</h5>
+                        <p class="card-text">{{post.abstract}}</p>
+                        <p class="card-text">
+                            <small class="text-muted">{{post.created_time}}</small>
+                            <span class="site-favorite badge rounded-pill bg-info text-danger"
+                                style="cursor: pointer;">♥ <span class="favorite-count">{{post.favorite}}</span>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-end">
+        {% if posts_page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1&type=post" target="_self">&laquo;First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts_page_obj.previous_page_number }}&type=post" target="_self">&laquo;
+                Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item"><a class="page-link">Page {{ posts_page_obj.number }} of
+                {{posts_page_obj.paginator.num_pages }}</a></li>
+
+        {% if posts_page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts_page_obj.next_page_number }}&type=post" target="_self">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts_page_obj.paginator.num_pages }}&type=post" target="_self">Last
+                &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
 {% endblock content %}
 {% block footer %}
 <div class="row">
@@ -291,6 +378,8 @@
                             .parents(".card")
                             .find(".favorite-count");
                         node.text(Number(node.text()) + 1);
+                    } else if (data.code == -1) {
+                        toastr.info("You have already favorited!")
                     } else {
                         toastr.error(data.detail, "Errors!");
                     }

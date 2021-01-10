@@ -107,17 +107,35 @@
 
     <script>
         $(document).ready(function () {
-            let toggle_theme = false
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFtoken", $.cookie("csrftoken"));
+                },
+            });
+            let toggle_theme = !('{{background}}' == 'line')
             let ckLine = null
-            let toggle_fn = function () {
+            let toggle_fn = function (remote_flag = true) {
                 if (toggle_theme == true) {
                     toggle_theme = false
-                    ckLine.destroy()
+                    ckLine && ckLine.destroy()
                     $('.toggle-btn').text('Dynamic Line Bg')
                     $('#ckLine').animate({
                         'opacity': 0
                     })
                     $('body').removeClass('body-bg')
+
+                    remote_flag && $.ajax({
+                        url: '/background/pure',
+                        type: "POST",
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (data.code == 0) {
+                                toastr.success("Success!");
+                            } else {
+                                toastr.info(data.detail, "Something Wrong!");
+                            }
+                        },
+                    });
                 } else {
                     toggle_theme = true
                     ckLine = $('#ckLine').ckLine({
@@ -133,14 +151,27 @@
                         'opacity': 1
                     })
                     $('body').addClass('body-bg')
+
+                    remote_flag && $.ajax({
+                        url: '/background/line',
+                        type: "POST",
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (data.code == 0) {
+                                toastr.success("Success!");
+                            } else {
+                                toastr.info(data.detail, "Something Wrong!");
+                            }
+                        },
+                    });
                 }
             }
-            toggle_fn()
+            toggle_fn(false)
             $('.toggle-btn').click(toggle_fn)
             setTimeout(() => {
                 if (toggle_theme) {
                     toggle_theme = !toggle_theme
-                    ckLine.destroy()
+                    ckLine && ckLine.destroy()
                 }
             }, 120 * 1000)
         })

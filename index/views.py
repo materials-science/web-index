@@ -43,7 +43,9 @@ def index_pagination(request):
         'posts_page_obj': posts_page_obj,
         'staff_list': staff_list,
         'is_internal_ip': utils.is_internal_ip(client_ip),
-        'ip': client_ip})
+        'ip': client_ip,
+        'background': request.session.get('background', 'line')
+    })
 
 
 @require_POST
@@ -90,3 +92,13 @@ def post_favorite(request, id):
         resp['detail'] = str(e)
 
     return JsonResponse(resp)
+
+
+@require_POST
+def background_change(request, type):
+    if type is not None:
+        request.session['background'] = type
+    return JsonResponse({
+        'code': '0',
+        'msg': 'success'
+    })

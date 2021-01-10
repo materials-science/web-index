@@ -20,5 +20,6 @@ from . import views
 urlpatterns = [
     path('', views.index_pagination, name='index'),
     path('sites/<int:id>/favorite', views.site_favorite, name='site_favorite'),
-    path('posts/<int:id>/favorite', views.post_favorite, name='post_favorite')
+    path('posts/<int:id>/favorite', views.post_favorite, name='post_favorite'),
+    path('background/<str:type>', views.background_change, name='background_change')
 ]
